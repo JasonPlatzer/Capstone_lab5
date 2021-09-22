@@ -1,8 +1,10 @@
+from enum import unique
 from peewee import *
 
 db = SqliteDatabase('jugglers.sqlite')
 
-
+class JugglerError():
+    pass
 class Juggler(Model):
         name = CharField()
         country = CharField()
@@ -15,43 +17,52 @@ class Juggler(Model):
             return f'{self.name}, {self.country}, {self.catches}'
 
 def add_juggler():
-    try:       
-        juggler_name = str(input('Enter a juggler name '))
-        juggler_country = str(input('Enter their country '))
-        juggler_catches = int(input('Enter their number of catches '))
-        new_juggler = Juggler(name=juggler_name, country=juggler_country, catches=juggler_catches)
-        new_juggler.save()
-    except ValueError as e:
-        print('Can\'t add juggler')
+          
+        juggler_name = input('Enter a juggler name ')
+        juggler_country = input('Enter their country ')
+        #from https://stackoverflow.com/questions/62848332/preventing-a-user-from-entering-a-string-in-python-3
+        juggler_catches = input('Enter their number of catches ')
+        if juggler_catches.isnumeric():
+            new_juggler = Juggler(name=juggler_name, country=juggler_country, catches=juggler_catches)
+            new_juggler.save()
+        else:
+            print('you must enter a number')
+   
+        
         
     
                   
 
 def search_for_juggler():
-    found = True
-    try:
+  #  found = True
+    
         name = input('Enter jugglers name to search for ')
         juggler = Juggler.select().where(Juggler.name == name)
-        print(list(juggler))    
-    except ValueError as e:
-        print('Can\'t find juggler')
+        if juggler:
+            print(list(juggler))
+        else:
+            print('can\'t find juggler')    
+    
    
         
     
 
 def change_catches(): 
-        try:
+        
             name = input('Enter jugglers name ')
-            new_catches = int(input('Enter their new number of catches '))
-            Juggler.update(catches=new_catches).where(Juggler.name == name).execute()             
-        except  ValueError as e:
-            print('You must enter a number')
+            
+            new_catches = input('Enter their new number of catches ')
+            if new_catches.isnumeric():
+                Juggler.update(catches=new_catches).where(Juggler.name == name).execute()             
+            else:
+                print('You must enter a number')
             
 def delete_juggler():
     name = input('Enter juggler to delete ')
-    try:
+    find_juggler = Juggler.select().where(Juggler.name == name)
+    if find_juggler:
         Juggler.delete().where(Juggler.name == name).execute()
-    except ValueError as e:
+    else:
         print('Can\'t find juggler')
 
 
