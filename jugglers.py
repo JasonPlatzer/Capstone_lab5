@@ -22,7 +22,9 @@ def add_juggler():
         juggler_country = input('Enter their country ')
         #from https://stackoverflow.com/questions/62848332/preventing-a-user-from-entering-a-string-in-python-3
         juggler_catches = input('Enter their number of catches ')
+        # checks if input is a number
         if juggler_catches.isnumeric():
+            # if all info is entered this adds a new juggler to the database
             new_juggler = Juggler(name=juggler_name, country=juggler_country, catches=juggler_catches)
             new_juggler.save()
         else:
@@ -34,9 +36,8 @@ def add_juggler():
                   
 
 def search_for_juggler():
-  #  found = True
-    
         name = input('Enter jugglers name to search for ')
+        # looks for a juggler in the database
         juggler = Juggler.select().where(Juggler.name == name)
         if juggler:
             print(list(juggler))
@@ -53,14 +54,17 @@ def change_catches():
             
             new_catches = input('Enter their new number of catches ')
             if new_catches.isnumeric():
+            #updates database and sets new catches according to name entered               
                 Juggler.update(catches=new_catches).where(Juggler.name == name).execute()             
             else:
                 print('You must enter a number')
             
 def delete_juggler():
     name = input('Enter juggler to delete ')
+    # looks for a juggler in database
     find_juggler = Juggler.select().where(Juggler.name == name)
     if find_juggler:
+        # deletes juggler by name
         Juggler.delete().where(Juggler.name == name).execute()
     else:
         print('Can\'t find juggler')

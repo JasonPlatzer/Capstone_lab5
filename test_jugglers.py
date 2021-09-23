@@ -1,5 +1,4 @@
 from peewee import *
-#import sqlite3
 import unittest
 from unittest import TestCase
 import jugglers
